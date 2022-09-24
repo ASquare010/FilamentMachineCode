@@ -2,6 +2,9 @@
 
 #include <AccelStepper.h>
 
+//stepper steps
+#define STEPS 200
+
 //RPM
 
 int nema16Rpm =2400;
@@ -18,9 +21,6 @@ int nema23Rpm = 225;
 #define CLOCK_PIN 12 //Green
 #define DATA_PIN  11 //~Blue
 
-//stepper steps
-#define STEPS 200
-
 //Nema 17 pins Grey
 #define clk17 3
 #define dir17 2
@@ -28,8 +28,8 @@ bool changDir = false;
 
 
 //Nema 23 pins Purple
-#define clk23 5 
-#define dir23 4
+#define clk23 4 
+#define dir23 5
 
 
 //Global Data varibles
@@ -57,24 +57,27 @@ void setup() {
   nema16.setMaxSpeed(nema16Rpm);
   nema16.setAcceleration(300.0);
   nema16.moveTo(1000000);
-
-  nema17.setMaxSpeed(nema17Rpm);
-  nema17.setAcceleration(300.0);
   
   nema23.setMaxSpeed(nema23Rpm);
   nema23.setAcceleration(300.0);
   nema23.moveTo(1000000);
+  
+  nema17.setMaxSpeed(nema17Rpm);
+  nema17.setAcceleration(300.0);
+  nema17.moveTo(500);
+  
 }
 
 void loop() {
  //readData();
-//   nema16.run();
-//   nema16.moveTo(1000000);
-//   
-//   invertDirNema17();
-
    nema23.run();
    nema23.moveTo(1000000);
+   nema16.run();
+   nema16.moveTo(1000000);
+   if (nema17.distanceToGo() == 0)
+      nema17.moveTo(-nema17.currentPosition());
+   nema17.run();
+
 }
 
 void readData()
@@ -133,21 +136,3 @@ void readCaliper()
   Serial.print(result); Serial.print(" mm\n");
   Serial.print(nema16Rpm); Serial.print(" Rpm\n");
 }
-void invertDirNema17()
-{
-  if(!nema17.isRunning())
-  {
-    if(changDir)
-   {
-     nema17.run();
-     nema17.moveTo(60);
-     changDir = !changDir;
-   }
-   else
-    {
-    nema17.moveTo(-60);
-    nema17.run();
-    changDir = !changDir;
-    }
-  }
-} 
