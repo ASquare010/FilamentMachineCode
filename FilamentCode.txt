@@ -7,7 +7,7 @@
 
 //RPM
 
-int nema16Rpm =2400;
+int nema16Rpm =1430;
 int nema17Rpm = 1;
 int nema23Rpm = 225;
 
@@ -56,24 +56,22 @@ void setup() {
   // Configure each stepper
   nema16.setMaxSpeed(nema16Rpm);
   nema16.setAcceleration(300.0);
-  nema16.moveTo(1000000);
+  nema16.moveTo(2000000000L);
   
   nema23.setMaxSpeed(nema23Rpm);
   nema23.setAcceleration(300.0);
-  nema23.moveTo(1000000);
+  nema23.moveTo(2000000000L);
   
   nema17.setMaxSpeed(nema17Rpm);
-  nema17.setAcceleration(300.0);
-  nema17.moveTo(500);
+  nema17.setAcceleration(1.0);
+  nema17.moveTo(30);
   
 }
 
 void loop() {
  //readData();
    nema23.run();
-   nema23.moveTo(1000000);
    nema16.run();
-   nema16.moveTo(1000000);
    if (nema17.distanceToGo() == 0)
       nema17.moveTo(-nema17.currentPosition());
    nema17.run();
